@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import axios from 'axios';
 import { RealtimeWeatherData } from '../@types/realtime-weather.type';
 import { WeatherForecasts } from '../@types/forecasts.type';
@@ -42,7 +42,7 @@ export class WeatherAPIService {
       let response = await axios.get(`http://api.weatherapi.com/v1/forecast.json?${query}`);
       return response;
     } catch (e) {
-      throw new Error('handle this');
+      throw new NotFoundException('City Not Found');
     }
   }
 }
