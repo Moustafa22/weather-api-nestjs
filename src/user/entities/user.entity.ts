@@ -14,6 +14,9 @@ export class User {
   @Column({ type: 'varchar', length: 20, unique: true, nullable: false })
   username: string;
 
+  @Column({ type: 'varchar', length: 40, unique: true, nullable: false })
+  email: string;
+
   @Column({ type: 'varchar' })
   password: string;
 
@@ -29,4 +32,16 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updatedAt: Date;
+
+  /**
+   * Hides user's sensitive information
+   * used when returning users data
+   *
+   * @params -
+   * @returns void
+   */
+  public async hideSensitives() {
+    this.password = 'hidden';
+    // Hide other sensitive information as well
+  }
 }
