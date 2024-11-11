@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
-import { AuthService } from './services/auth.service';
-import { RegisterDto } from './dto/register.dto';
-import { ResponseInterceptor } from 'src/utils/interceptors/response.interceptor';
+import { LoginDto } from '../dto/login.dto';
+import { AuthService } from '../services/auth.service';
+import { RegisterDto } from '../dto/register.dto';
+import { ResponseInterceptor } from '../../utils/interceptors/response.interceptor';
 
 @Controller('auth')
 @UseInterceptors(ResponseInterceptor)

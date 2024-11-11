@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtVerifyOptions } from '@nestjs/jwt/dist/interfaces';
 import { PasswordService } from './password.service';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/entities/user.entity';
+import { UserService } from '../../user/services/user.service';
+import { User } from '../../user/entities/user.entity';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 

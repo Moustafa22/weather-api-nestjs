@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, UseInterceptors } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { AuthGuard } from 'src/auth/guards/auth.gaurd';
-import { ResponseInterceptor } from 'src/utils/interceptors/response.interceptor';
+import { UserService } from '../services/user.service';
+import { AuthGuard } from '../../auth/guards/auth.guard';
+import { ResponseInterceptor } from '../../utils/interceptors/response.interceptor';
 
 @Controller('user')
 @UseGuards(AuthGuard)
