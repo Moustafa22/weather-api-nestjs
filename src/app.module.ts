@@ -7,10 +7,13 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { LocationModule } from './location/location.module';
 import { WeatherModule } from './weather/weather.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -26,6 +29,7 @@ import { WeatherModule } from './weather/weather.module';
     AuthModule,
     LocationModule,
     WeatherModule,
+    TaskSchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

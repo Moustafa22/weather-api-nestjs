@@ -41,4 +41,8 @@ export class LocationService {
   public async remove(id: number) {
     this.locationRepository.delete(id);
   }
+
+  public async findAll() {
+    return this.locationRepository.find();
+  }
 }
