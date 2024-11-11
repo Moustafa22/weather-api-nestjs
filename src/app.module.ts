@@ -9,6 +9,8 @@ import { LocationModule } from './location/location.module';
 import { WeatherModule } from './weather/weather.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -25,6 +27,12 @@ import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
       logging: true,
       autoLoadEntities: true,
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 10000,
+        limit: 1,
+      },
+    ]),
     UserModule,
     AuthModule,
     LocationModule,
@@ -32,6 +40,12 @@ import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
     TaskSchedulingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
