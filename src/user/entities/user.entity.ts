@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Location } from 'src/location/entities/location.entity';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -19,6 +20,9 @@ export class User {
 
   @Column({ type: 'varchar' })
   password: string;
+
+  @OneToMany(() => Location, (location) => location.user)
+  locations: Location[];
 
   @CreateDateColumn({
     type: 'timestamp',
