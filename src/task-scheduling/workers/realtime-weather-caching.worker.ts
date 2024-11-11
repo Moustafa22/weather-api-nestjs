@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { LocationService } from 'src/location/services/location.service';
+import { LocationService } from '../../location/services/location.service';
 import { sleep } from '../../utils/helpers/sleep';
-import { WeatherAPICacheWrapperService } from 'src/weather/services/weather-api-cache.service';
+import { WeatherAPICacheWrapperService } from '../../weather/services/weather-api-cache.service';
 import { FiveSecondsInMs } from '../../utils/helpers/time';
 
 @Injectable()

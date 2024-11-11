@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
@@ -13,21 +11,14 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
+import { DbConfigFactory } from './utils/helpers/db.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      password: process.env.POSTGRES_PASSWORD,
-      username: process.env.POSTGRES_USER,
-      database: process.env.POSTGRES_DB_NAME,
-      synchronize: process.env.APP_ENV == 'DEV',
-      logging: true,
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: DbConfigFactory,
     }),
     ThrottlerModule.forRoot([
       {
@@ -45,9 +36,8 @@ import { ApolloDriver } from '@nestjs/apollo';
     WeatherModule,
     TaskSchedulingModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

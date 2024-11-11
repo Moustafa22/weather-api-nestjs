@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TaskManagerService } from './services/task-manager.service';
 import { RealtimeWeatherCachingWorker } from './workers/realtime-weather-caching.worker';
 import { ForecastsWeatherCachingWorker } from './workers/forecasts-weather-caching.worker';
-import { LocationModule } from 'src/location/location.module';
-import { WeatherModule } from 'src/weather/weather.module';
+import { LocationModule } from '../location/location.module';
+import { WeatherModule } from '../weather/weather.module';
 
 @Module({
   imports: [LocationModule, WeatherModule],

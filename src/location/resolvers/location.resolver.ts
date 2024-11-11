@@ -6,7 +6,7 @@ import { LocationType } from '../entities/location.type';
 import { ForbiddenException, NotFoundException, UseGuards } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { GqlCurrentUser } from '../../utils/decorator/current-user.decorator.gql';
-import { GqlAuthGuard } from 'src/auth/guards/auth.guard.gql';
+import { GqlAuthGuard } from '../../auth/guards/auth.guard.gql';
 
 @Resolver(() => LocationType)
 @UseGuards(GqlAuthGuard)
