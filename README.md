@@ -1,73 +1,109 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Weather App Wrapper
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Pre-requisites
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Running Postgresql Engine
+- Running Redis Server
+- Installed Node.js and TypeScript
 
 ## Installation
 
-```bash
-$ yarn install
-```
+- Clone the repository, then copy `.env.example` to the base directory and rename it to `.env`
 
-## Running the app
+- Configure the environment variables listed in the `.env` file (e.g., database settings, Redis configuration, API keys, etc.).
 
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Test
+To install the project dependencies, run:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn
 ```
 
-## Support
+or
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm install
+```
 
-## Stay in touch
+## Quick Start
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+To start the project, run:
 
-## License
+```bash
+yarn start
+```
 
-Nest is [MIT licensed](LICENSE).
+or
+
+```bash
+npm start
+```
+
+Once started, you can execute API calls at [127.0.0.1:3000](http://127.0.0.1:3000)
+
+## Tests
+
+To run the unit tests:
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+npm run test
+```
+
+For end-to-end (E2E) tests, run:
+
+```bash
+yarn test:e2e
+```
+
+or
+
+```bash
+npm run test:e2e
+```
+
+Note: unit and E2E test coverage is intentionally partial. If you’d like me to complete it, feel free to reach out.
+
+## Technologies used & Considerations
+
+### Technologies
+
+- Used Weather API as a third party to fetch the weather data. <br/>
+  you can use this API key for testing `efe3463874694d179e8105550241111` (valid until 25/11)
+
+- Used redis for caching
+
+- Postgresql for the database
+
+### Considerations & Assumptions
+
+- It is assumed that the real-time weather data updates on an hourly basis, as the response from the API is segmented by hours.
+
+- It is assumed that the forecasted weather updates on a daily basis.
+
+- While caching could be implemented in simpler ways, I’ve opted for the approach that best fits this scenario. Note that caching could also be implemented at the request level; however, this approach would lack customization and scalability for future enhancements.
+
+- The requirements for the logging section were unclear. It is uncertain whether the reference was to Datadog integration or another logging solution (console, file based archived daily). Clarification would be helpful.
+
+## Caching Strategy
+
+I implemented a `Read Through` caching strategy along with` TTL (Time-to-Live)` for cache eviction. A cron job is used to refresh the cache and handle invalidation every hour.
+
+The backend reads data from the cache. If the data is not present, it fetches it from the main source, caches it, and serves it to the client.
+
+- Real-time weather data is cached for 1 hour.
+- Forecast data is cached for 12 hours.
+
+The cron job refreshes the cache only for the user’s favorite locations. Other locations are evicted from the cache after 1 hour for real-time data or 12 hours for forecast data.
+
+## Documentation
+
+Please checkout the Postman API documentation [here](https://documenter.getpostman.com/view/4544669/2sAY545dt8)
+
+A json version of the documentation (in case you want to import it into the postman) is available in `artifacts\Weather App.postman_collection.json`
+
+Note that the documentation can be done in swagger as well, but since documentation quality is important i chose Postman so i can make custom documentation.

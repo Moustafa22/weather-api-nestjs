@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "e9aceda9-e802-4189-ad06-52bd58c0e3ed",
 		"name": "Weather App",
+		"description": "First Set the variable values (Host and token when you login)\n\nOnly User and Locations sections requires authorization.\n\n# Rate Limit\n\nthe current rate limitation is 15 requests per 10 seconds.\n\n# Authorization\n\nuse Bearer Token in the header and set the jwt token in the field value\n\n# Response Types\n\n_**Examples for all the responses are available in examples section for each API call**_",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "4544669"
 	},
@@ -23,7 +24,7 @@
 								}
 							}
 						},
-						"url": "localhost:3000/auth/register"
+						"url": "{{HOST}}/auth/register"
 					},
 					"response": [
 						{
@@ -290,11 +291,8 @@
 				},
 				{
 					"name": "Login",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -305,7 +303,7 @@
 								}
 							}
 						},
-						"url": "localhost:3000/auth/login"
+						"url": "{{HOST}}/auth/login"
 					},
 					"response": [
 						{
@@ -374,7 +372,7 @@
 										}
 									}
 								},
-								"url": "localhost:3000/auth/login"
+								"url": "{{HOST}}/auth/login"
 							},
 							"status": "Bad Request",
 							"code": 400,
@@ -426,7 +424,7 @@
 										}
 									}
 								},
-								"url": "localhost:3000/auth/login"
+								"url": "{{HOST}}/auth/login"
 							},
 							"status": "Bad Request",
 							"code": 400,
@@ -466,7 +464,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "The authentication for the user to login/register into the app"
 		},
 		{
 			"name": "User",
@@ -476,7 +475,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "localhost:3000/user/profile"
+						"url": "{{HOST}}/user/profile"
 					},
 					"response": [
 						{
@@ -527,7 +526,7 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": "localhost:3000/user/profile"
+								"url": "{{HOST}}/user/profile"
 							},
 							"status": "OK",
 							"code": 200,
@@ -570,7 +569,7 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": "localhost:3000/user/profile"
+								"url": "{{HOST}}/user/profile"
 							},
 							"status": "Unauthorized",
 							"code": 401,
@@ -610,7 +609,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "User information Section\n\n<u><i><b>Authentication Required</b></i></u>"
 		},
 		{
 			"name": "Locations",
@@ -629,7 +629,7 @@
 								}
 							}
 						},
-						"url": "localhost:3000/location"
+						"url": "{{HOST}}/location"
 					},
 					"response": [
 						{
@@ -689,7 +689,7 @@
 										}
 									}
 								},
-								"url": "localhost:3000/location"
+								"url": "{{HOST}}/location"
 							},
 							"status": "Created",
 							"code": 201,
@@ -741,7 +741,7 @@
 										}
 									}
 								},
-								"url": "localhost:3000/location"
+								"url": "{{HOST}}/location"
 							},
 							"status": "Bad Request",
 							"code": 400,
@@ -786,7 +786,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "localhost:3000/location"
+						"url": "{{HOST}}/location"
 					},
 					"response": [
 						{
@@ -837,7 +837,7 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": "localhost:3000/location"
+								"url": "{{HOST}}/location"
 							},
 							"status": "Unauthorized",
 							"code": 401,
@@ -882,7 +882,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "localhost:3000/location/3"
+						"url": "{{HOST}}/location/3"
 					},
 					"response": [
 						{
@@ -933,7 +933,7 @@
 							"originalRequest": {
 								"method": "DELETE",
 								"header": [],
-								"url": "localhost:3000/location/1"
+								"url": "{{HOST}}/location/1"
 							},
 							"status": "OK",
 							"code": 200,
@@ -976,7 +976,7 @@
 							"originalRequest": {
 								"method": "DELETE",
 								"header": [],
-								"url": "localhost:3000/location/1"
+								"url": "{{HOST}}/location/1"
 							},
 							"status": "Not Found",
 							"code": 404,
@@ -1019,7 +1019,7 @@
 							"originalRequest": {
 								"method": "DELETE",
 								"header": [],
-								"url": "localhost:3000/location/3"
+								"url": "{{HOST}}/location/3"
 							},
 							"status": "Forbidden",
 							"code": 403,
@@ -1059,7 +1059,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "User's Favorite Locations.\n\nThe user has the ability to add locations to his favorite list.\n\n<u><i><b>Authentication Required</b></i></u>"
 		},
 		{
 			"name": "Weather",
@@ -1069,7 +1070,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "localhost:3000/weather/dubai"
+						"url": "{{HOST}}/weather/dubai"
 					},
 					"response": [
 						{
@@ -1224,7 +1225,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "localhost:3000/forecast/dubai"
+						"url": "{{HOST}}/forecast/dubai"
 					},
 					"response": [
 						{
@@ -1374,7 +1375,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "Get realtime weather data or Forecasts for the next 5 days\n\n<u><i><b>Not Authentication Required</b></i></u>"
 		},
 		{
 			"name": "GraphQl Location",
@@ -1829,7 +1831,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "GraphQL Endpoints to manage users' locations\n\n<u><i><b>Authentication Required</b></i></u>"
 		}
 	],
 	"auth": {
@@ -1858,6 +1861,18 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
 		}
 	]
 }
