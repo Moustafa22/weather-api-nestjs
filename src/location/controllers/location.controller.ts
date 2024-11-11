@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Request,
+  UseGuards,
+  UseInterceptors,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { LocationService } from '../services/location.service';
 import { CreateLocationDto } from '../dto/create-location.dto';
 import { AuthGuard } from '../../auth/guards/auth.guard';
@@ -20,12 +33,18 @@ export class LocationController {
   @Get()
   findAll(@Request() req) {
     const authUser = req.authUser;
+
     return this.locationService.findAllByUserId(authUser.userId);
   }
 
   @Delete(':id')
-  remove(@Request() req, @Param('id') id: string) {
-    // TODO check if the passed parameter is the user's location not someone else's
+  public async remove(@Request() req, @Param('id') id: string) {
+    const authUser = req.authUser;
+
+    const location = await this.locationService.findOne(+id);
+    if (!location) throw new NotFoundException('Not Found');
+    if (authUser.userId !== location.user.id) throw new ForbiddenException('Forbidden Action');
+
     return this.locationService.remove(+id);
   }
 }

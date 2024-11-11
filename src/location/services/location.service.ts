@@ -32,6 +32,9 @@ export class LocationService {
       where: {
         id,
       },
+      relations: {
+        user: true,
+      },
     });
   }
 

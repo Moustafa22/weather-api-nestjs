@@ -1,4 +1,4 @@
-import { Location } from 'src/location/entities/location.entity';
+import { Location } from '../../location/entities/location.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
