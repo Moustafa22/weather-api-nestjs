@@ -11,6 +11,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TaskSchedulingModule } from './task-scheduling/task-scheduling.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -30,11 +32,15 @@ import { APP_GUARD } from '@nestjs/core';
     ThrottlerModule.forRoot([
       {
         ttl: 10000,
-        limit: 1,
+        limit: 15,
       },
     ]),
     UserModule,
     AuthModule,
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      driver: ApolloDriver,
+    }),
     LocationModule,
     WeatherModule,
     TaskSchedulingModule,
