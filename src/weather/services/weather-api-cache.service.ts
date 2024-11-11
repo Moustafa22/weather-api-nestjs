@@ -4,7 +4,7 @@ import { RealtimeWeatherData } from '../@types/realtime-weather.type';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { WeatherForecasts } from '../@types/forecasts.type';
-import { HourInMs, TwelveHoursInMs } from 'src/utils/helpers/time';
+import { HourInMs, TwelveHoursInMs } from '../../utils/helpers/time';
 
 @Injectable()
 export class WeatherAPICacheWrapperService {

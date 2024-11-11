@@ -1,13 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WeatherController } from './weather.controller';
-import { ResponseInterceptor } from '../../utils/interceptors/response.interceptor';
+import { WeatherAPIService } from './weather-api.service';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { RealtimeWeatherData } from '../@types/realtime-weather.type';
 import { WeatherForecasts } from '../@types/forecasts.type';
-import { WeatherAPICacheWrapperService } from '../services/weather-api-cache.service';
+import { HourInMs, TwelveHoursInMs } from '../../utils/helpers/time';
+import { WeatherAPICacheWrapperService } from './weather-api-cache.service';
 
-describe('WeatherController', () => {
-  let controller: WeatherController;
-  let weatherService: WeatherAPICacheWrapperService;
+describe('WeatherAPICacheWrapperService', () => {
+  let service: WeatherAPICacheWrapperService;
+  let weatherService: WeatherAPIService;
+  let cacheManager: Cache;
 
   const mockRealtimeWeatherData: RealtimeWeatherData = {
     humidity: 50,
@@ -126,44 +129,80 @@ describe('WeatherController', () => {
     },
   ];
 
+  const mockCache = {
+    get: jest.fn(),
+    set: jest.fn(),
+  };
+
   const mockWeatherService = {
-    getCachedRealtimeWeather: jest.fn().mockResolvedValue(mockRealtimeWeatherData),
-    getCachedWeatherForecasts: jest.fn().mockResolvedValue(mockWeatherForecasts),
+    getRealtimeWeather: jest.fn().mockResolvedValue(mockRealtimeWeatherData),
+    getWeatherForecasts: jest.fn().mockResolvedValue(mockWeatherForecasts),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [WeatherController],
-      providers: [{ provide: WeatherAPICacheWrapperService, useValue: mockWeatherService }],
-    })
-      .overrideInterceptor(ResponseInterceptor)
-      .useValue({ intercept: jest.fn() })
-      .compile();
+      providers: [
+        WeatherAPICacheWrapperService,
+        { provide: WeatherAPIService, useValue: mockWeatherService },
+        { provide: CACHE_MANAGER, useValue: mockCache },
+      ],
+    }).compile();
 
-    controller = module.get<WeatherController>(WeatherController);
-    weatherService = module.get<WeatherAPICacheWrapperService>(WeatherAPICacheWrapperService);
+    service = module.get<WeatherAPICacheWrapperService>(WeatherAPICacheWrapperService);
+    weatherService = module.get<WeatherAPIService>(WeatherAPIService);
+    cacheManager = module.get<Cache>(CACHE_MANAGER);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getRealtimeWeather', () => {
-    it('should return current weather data for the specified city', async () => {
-      const city = 'London';
-      const result = await controller.getRealtimeWeather(city);
+  describe('getCachedRealtimeWeather', () => {
+    it('should return cached data if available', async () => {
+      const cityName = 'London';
+      mockCache.get.mockResolvedValue(mockRealtimeWeatherData);
 
-      expect(weatherService.getCachedRealtimeWeather).toHaveBeenCalledWith(city);
+      const result = await service.getCachedRealtimeWeather(cityName);
+
+      expect(cacheManager.get).toHaveBeenCalledWith(`realtime-${cityName}`);
+      expect(result).toEqual(mockRealtimeWeatherData);
+      expect(weatherService.getRealtimeWeather).not.toHaveBeenCalled();
+    });
+
+    it('should fetch data from API and cache it if not in cache', async () => {
+      const cityName = 'Paris';
+      mockCache.get.mockResolvedValue(null);
+
+      const result = await service.getCachedRealtimeWeather(cityName);
+
+      expect(cacheManager.get).toHaveBeenCalledWith(`realtime-${cityName}`);
+      expect(weatherService.getRealtimeWeather).toHaveBeenCalledWith(cityName);
+      expect(cacheManager.set).toHaveBeenCalledWith(`realtime-${cityName}`, mockRealtimeWeatherData, HourInMs);
       expect(result).toEqual(mockRealtimeWeatherData);
     });
   });
 
-  describe('getWeatherForecasts', () => {
-    it('should return weather forecast data for the specified city', async () => {
-      const city = 'London';
-      const result = await controller.getWeatherForecasts(city);
+  describe('getCachedWeatherForecasts', () => {
+    it('should return cached forecast data if available', async () => {
+      const cityName = 'Tokyo';
+      mockCache.get.mockResolvedValue(mockWeatherForecasts);
 
-      expect(weatherService.getCachedWeatherForecasts).toHaveBeenCalledWith(city);
+      const result = await service.getCachedWeatherForecasts(cityName);
+
+      expect(cacheManager.get).toHaveBeenCalledWith(`forecasts-${cityName}`);
+      expect(result).toEqual(mockWeatherForecasts);
+      expect(weatherService.getWeatherForecasts).not.toHaveBeenCalled();
+    });
+
+    it('should fetch forecast data from API and cache it if not in cache', async () => {
+      const cityName = 'Berlin';
+      mockCache.get.mockResolvedValue(null);
+
+      const result = await service.getCachedWeatherForecasts(cityName);
+
+      expect(cacheManager.get).toHaveBeenCalledWith(`forecasts-${cityName}`);
+      expect(weatherService.getWeatherForecasts).toHaveBeenCalledWith(cityName);
+      expect(cacheManager.set).toHaveBeenCalledWith(`forecasts-${cityName}`, mockWeatherForecasts, TwelveHoursInMs);
       expect(result).toEqual(mockWeatherForecasts);
     });
   });
