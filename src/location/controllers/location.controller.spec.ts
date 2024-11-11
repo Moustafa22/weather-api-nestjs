@@ -54,7 +54,7 @@ describe('LocationController', () => {
 
       mockLocationService.create.mockResolvedValue(createdLocation);
 
-      const result = await locationController.create({ authUser: mockAuthUser }, createLocationDto);
+      const result = await locationController.create(createLocationDto, mockAuthUser);
 
       expect(locationService.create).toHaveBeenCalledWith(createLocationDto, mockAuthUser.userId);
       expect(result).toEqual(createdLocation);
@@ -70,7 +70,7 @@ describe('LocationController', () => {
 
       mockLocationService.findAllByUserId.mockResolvedValue(locations);
 
-      const result = await locationController.findAll({ authUser: mockAuthUser });
+      const result = await locationController.findAll(mockAuthUser);
 
       expect(locationService.findAllByUserId).toHaveBeenCalledWith(mockAuthUser.userId);
       expect(result).toEqual(locations);
@@ -85,7 +85,7 @@ describe('LocationController', () => {
       mockLocationService.findOne.mockResolvedValue(location);
       mockLocationService.remove.mockResolvedValue({ affected: 1 });
 
-      await locationController.remove({ authUser: mockAuthUser }, locationId.toString());
+      await locationController.remove(mockAuthUser, locationId.toString());
 
       expect(locationService.findOne).toHaveBeenCalledWith(locationId);
       expect(locationService.remove).toHaveBeenCalledWith(locationId);

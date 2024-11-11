@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, 
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../../auth/guards/auth.guard';
 import { ResponseInterceptor } from '../../utils/interceptors/response.interceptor';
+import { CurrentUser } from '../../utils/decorator/current-user.decorator';
 
 @Controller('user')
 @UseGuards(AuthGuard)
@@ -10,11 +11,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('profile')
-  public async findOne(@Request() req) {
-    // extract user from req's token
-    const authUser = req.authUser;
-
-    const user = await this.userService.findOne(authUser.userId);
+  public async findOne(@CurrentUser() currentUser) {
+    const user = await this.userService.findOne(currentUser.userId);
     user.hideSensitives();
 
     return user;

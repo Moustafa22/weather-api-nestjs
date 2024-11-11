@@ -189,7 +189,7 @@ describe('WeatherAPICacheWrapperService', () => {
 
       const result = await service.getCachedWeatherForecasts(cityName);
 
-      expect(cacheManager.get).toHaveBeenCalledWith(`forecasts-${cityName}`);
+      expect(cacheManager.get).toHaveBeenCalledWith(`forecast-${cityName}`);
       expect(result).toEqual(mockWeatherForecasts);
       expect(weatherService.getWeatherForecasts).not.toHaveBeenCalled();
     });
@@ -200,9 +200,9 @@ describe('WeatherAPICacheWrapperService', () => {
 
       const result = await service.getCachedWeatherForecasts(cityName);
 
-      expect(cacheManager.get).toHaveBeenCalledWith(`forecasts-${cityName}`);
+      expect(cacheManager.get).toHaveBeenCalledWith(`forecast-${cityName}`);
       expect(weatherService.getWeatherForecasts).toHaveBeenCalledWith(cityName);
-      expect(cacheManager.set).toHaveBeenCalledWith(`forecasts-${cityName}`, mockWeatherForecasts, TwelveHoursInMs);
+      expect(cacheManager.set).toHaveBeenCalledWith(`forecast-${cityName}`, mockWeatherForecasts, TwelveHoursInMs);
       expect(result).toEqual(mockWeatherForecasts);
     });
   });

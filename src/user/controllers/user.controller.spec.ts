@@ -57,8 +57,7 @@ describe('UserController', () => {
 
       mockUserService.findOne.mockResolvedValue(mockUser);
 
-      const req = { authUser: mockAuthUser };
-      const result = await controller.findOne(req as any);
+      const result = await controller.findOne(mockAuthUser);
 
       expect(userService.findOne).toHaveBeenCalledWith('123');
       expect(mockUser.hideSensitives).toHaveBeenCalled();
