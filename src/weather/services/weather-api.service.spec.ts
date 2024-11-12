@@ -157,7 +157,7 @@ describe('WeatherAPIService', () => {
     it('should throw an error when API call fails', async () => {
       mockedAxios.get.mockRejectedValue(new Error('API Error'));
 
-      await expect(service.getRealtimeWeather('London')).rejects.toThrow('handle this');
+      await expect(service.getRealtimeWeather('London')).rejects.toThrow('City Not Found');
     });
   });
 
@@ -176,7 +176,7 @@ describe('WeatherAPIService', () => {
     it('should throw an error when API call fails', async () => {
       mockedAxios.get.mockRejectedValue(new Error('API Error'));
 
-      await expect(service.getWeatherForecasts('London')).rejects.toThrow('handle this');
+      await expect(service.getWeatherForecasts('London')).rejects.toThrow('City Not Found');
     });
   });
 });
